@@ -1,0 +1,65 @@
+---
+// Giscus comments, powered by GitHub Discussions.
+// Fill these in after running the setup at https://giscus.app
+// (it generates these exact values for your repo).
+const GISCUS_REPO = "YOUR_GITHUB_USERNAME/YOUR_REPO_NAME";
+const GISCUS_REPO_ID = "REPLACE_WITH_REPO_ID";
+const GISCUS_CATEGORY = "Comments";
+const GISCUS_CATEGORY_ID = "REPLACE_WITH_CATEGORY_ID";
+
+const { lang = "en" } = Astro.props;
+const giscusLang = lang === "fa" ? "fa" : "en";
+---
+
+<section class="mt-12 border-t border-border pt-10" dir={lang === "fa" ? "rtl" : "ltr"}>
+  <h2 class="font-serif text-lg font-semibold">{lang === "fa" ? "نظرات" : "Comments"}</h2>
+  <div
+    class="mt-6"
+    data-giscus
+    data-repo={GISCUS_REPO}
+    data-repo-id={GISCUS_REPO_ID}
+    data-category={GISCUS_CATEGORY}
+    data-category-id={GISCUS_CATEGORY_ID}
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-input-position="bottom"
+    data-lang={giscusLang}
+  >
+  </div>
+</section>
+
+<script>
+  function loadGiscus() {
+    const mount = document.querySelector("[data-giscus]");
+    if (!mount || mount.dataset.loaded) return;
+    mount.dataset.loaded = "true";
+
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    script.setAttribute("data-repo", mount.dataset.repo);
+    script.setAttribute("data-repo-id", mount.dataset.repoId);
+    script.setAttribute("data-category", mount.dataset.category);
+    script.setAttribute("data-category-id", mount.dataset.categoryId);
+    script.setAttribute("data-mapping", mount.dataset.mapping);
+    script.setAttribute("data-strict", mount.dataset.strict);
+    script.setAttribute("data-reactions-enabled", mount.dataset.reactionsEnabled);
+    script.setAttribute("data-input-position", mount.dataset.inputPosition);
+    script.setAttribute("data-theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
+    script.setAttribute("data-lang", mount.dataset.lang);
+    mount.appendChild(script);
+  }
+
+  loadGiscus();
+
+  // Keep giscus's theme in sync if the reader toggles light/dark mode.
+  const observer = new MutationObserver(() => {
+    const frame = document.querySelector("iframe.giscus-frame");
+    if (!frame) return;
+    const theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+    frame.contentWindow?.postMessage({ giscus: { setConfig: { theme } } }, "https://giscus.app");
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+</script>

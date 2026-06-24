@@ -1,0 +1,27 @@
+{
+  "name": "quiet-pages",
+  "version": "1.0.0",
+  "description": "A quiet Astro magazine theme for essays, field notes, and long-form writing.",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^6.0.3",
+    "@tailwindcss/vite": "^4.3.1",
+    "astro": "^6.4.7",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "tailwindcss": "^4.3.1",
+    "tw-animate-css": "^1.4.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.4",
+    "vite": "^7.3.5"
+  }
+}
