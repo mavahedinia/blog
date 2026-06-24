@@ -50,28 +50,9 @@ const ogImageUrl = absoluteUrl(ogImage);
     <meta name="twitter:description" content={description} />
     {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-    {
-      lang === "fa" ? (
-        <link rel="preload" href="/fonts/vazirmatn.woff2" as="font" type="font/woff2" crossorigin />
-      ) : (
-        <>
-          <link
-            rel="preload"
-            href="/fonts/inter-latin.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-          />
-          <link
-            rel="preload"
-            href="/fonts/fraunces-latin.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-          />
-        </>
-      )
-    }
+    <link rel="preload" href="/fonts/vazirmatn.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
     <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
     {

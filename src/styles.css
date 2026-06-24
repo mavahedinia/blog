@@ -41,7 +41,7 @@
   font-weight: 100 900;
   font-display: swap;
   src: url("/fonts/vazirmatn.woff2") format("woff2-variations");
-  unicode-range: U+0600-06FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF, U+0000-00FF;
+  unicode-range: U+0600-06FF, U+200C-200F, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 .font-fa {
@@ -78,8 +78,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --font-serif: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", "Vazirmatn", ui-serif, Georgia, serif;
+  --font-sans: "Inter", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
