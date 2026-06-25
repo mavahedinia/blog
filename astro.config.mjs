@@ -3,6 +3,7 @@ import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import remarkEmoji from "remark-emoji";
 
 const site = process.env.SITE_URL || process.env.PUBLIC_SITE_URL || "https://blog.vahedinia.me";
 
@@ -10,7 +11,7 @@ export default defineConfig({
   site,
   integrations: [mdx()],
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkEmoji],
     rehypePlugins: [rehypeKatex],
   },
   vite: {
