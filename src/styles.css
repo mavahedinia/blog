@@ -348,6 +348,8 @@
     background: oklch(0.95 0.012 85);
     padding: 0.15rem 0.4rem;
     border-radius: 4px;
+    direction: ltr;
+    unicode-bidi: isolate;
   }
   .dark & code {
     color: oklch(0.88 0.08 55);
@@ -375,6 +377,8 @@
     font-size: 0.9rem;
     line-height: 1.6;
     box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.75);
+    direction: ltr;
+    text-align: left;
   }
   .dark & pre {
     color: oklch(0.91 0.012 85) !important;
