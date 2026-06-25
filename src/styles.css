@@ -84,6 +84,14 @@
 }
 
 :root {
+  --hero-base: #2e1e0f;
+  --hero-fill: #4a2e18;
+  --hero-mid: #3d2512;
+  --hero-depth: #261508;
+  --hero-main: #6b4022;
+  --hero-edge: #331c0c;
+  --hero-accent: #8b5630;
+
   --radius: 0.5rem;
   --background: oklch(0.985 0.004 90);
   --foreground: oklch(0.18 0.01 60);
@@ -107,6 +115,14 @@
 }
 
 .dark {
+  --hero-base: #0d0907;
+  --hero-fill: #1a1008;
+  --hero-mid: #221409;
+  --hero-depth: #15100a;
+  --hero-main: #301a0c;
+  --hero-edge: #1e1209;
+  --hero-accent: #4a2c14;
+
   --background: oklch(0.16 0.005 80);
   --foreground: oklch(0.95 0.005 80);
   --card: oklch(0.16 0.005 80);

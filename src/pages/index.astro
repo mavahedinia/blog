@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PostCard from "../components/PostCard.astro";
 import Icon from "../components/Icon.astro";
-import autumnScene from "../assets/autumn-scene.webp";
 import {
   SITE,
   categories,
@@ -28,15 +27,21 @@ const featuredDir = featured.lang === "fa" ? "rtl" : "ltr";
   flushFooter
 >
   <section class="relative -mt-[calc(4rem+2px)] min-h-[calc(100svh-2rem)] overflow-hidden border-b border-border/60 pt-[calc(4rem+2px)] sm:min-h-[760px]">
-    <Image
-      src={autumnScene}
-      alt=""
-      class="absolute inset-0 h-full w-full object-cover object-center"
-      loading="eager"
-      decoding="async"
-      widths={[640, 960, 1280, 1920, 2560]}
-      sizes="100vw"
-    />
+    <svg
+      class="absolute inset-0 h-full w-full"
+      viewBox="0 0 1200 800"
+      preserveAspectRatio="xMidYMid slice"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <rect width="1200" height="800" fill="var(--hero-base)" />
+      <rect x="640" y="0" width="560" height="800" fill="var(--hero-fill)" />
+      <rect x="720" y="-40" width="440" height="520" fill="var(--hero-mid)" />
+      <rect x="660" y="500" width="540" height="340" fill="var(--hero-depth)" />
+      <rect x="760" y="60" width="300" height="480" fill="var(--hero-main)" />
+      <rect x="1040" y="80" width="200" height="640" fill="var(--hero-edge)" />
+      <rect x="820" y="160" width="180" height="280" fill="var(--hero-accent)" />
+    </svg>
     <div
       aria-hidden="true"
       class="absolute inset-0 bg-[linear-gradient(90deg,oklch(0.1_0.02_70_/_0.68),oklch(0.16_0.02_80_/_0.38)_46%,oklch(0.98_0.01_90_/_0.1))] dark:bg-[linear-gradient(90deg,oklch(0.08_0.01_70_/_0.78),oklch(0.08_0.01_70_/_0.52)_48%,oklch(0.08_0.01_70_/_0.18))]"
