@@ -96,8 +96,9 @@ export const formatDate = (iso) =>
   });
 
 export const SITE = {
-  name: "Amin's Blog",
-  description: "Personal takes on almost everything, master of all.",
+  name: "Thinking Humans",
+  description: "Personal takes on almost everything, master of all. All written by a human; my " +
+    "brain's last resort to think, exercise and criticize.",
   url: siteUrl,
   socials: {
     twitter: "https://x.com/01BinarySoul",
