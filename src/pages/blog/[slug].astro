@@ -11,7 +11,6 @@ import {
   SITE,
   getAuthor,
   getCategory,
-  getTag,
   formatDate,
   relatedPosts,
   adjacentPosts,
@@ -157,14 +156,11 @@ const jsonLd = {
         <div class="mt-10 flex flex-wrap items-center gap-2">
           <span class="text-xs uppercase tracking-wider text-muted-foreground">Tags</span>
           {
-            post.tags.map((tag) => {
-              const item = getTag(tag);
-              return (
-                <a href={`/tags/${tag}`} class="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground hover:border-primary hover:text-primary">
-                  #{item?.name ?? tag}
-                </a>
-              );
-            })
+            post.tags.map((tag) => (
+              <a href={`/tags/${tag}`} class="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground hover:border-primary hover:text-primary">
+                #{tag}
+              </a>
+            ))
           }
         </div>
 

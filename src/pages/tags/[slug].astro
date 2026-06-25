@@ -4,8 +4,8 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import PostCard from "../../components/PostCard.astro";
 import { SITE, tags, postsByTag } from "../../lib/blog-data.js";
 
-export function getStaticPaths() {
-  return tags.map((tag) => ({ params: { slug: tag.slug }, props: { tag } }));
+export async function getStaticPaths() {
+  return (await tags()).map((tag) => ({ params: { slug: tag.slug }, props: { tag } }));
 }
 
 const { tag } = Astro.props;

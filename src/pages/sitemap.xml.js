@@ -4,6 +4,7 @@ const BASE_URL = SITE.url || "";
 
 export async function GET() {
   const posts = await sortedPosts();
+  const allTags = await tags();
   const entries = [
     { path: "/", changefreq: "weekly", priority: "1.0" },
     { path: "/blog", changefreq: "daily", priority: "0.9" },
@@ -20,7 +21,7 @@ export async function GET() {
       changefreq: "weekly",
       priority: "0.6",
     })),
-    ...tags.map((tag) => ({
+    ...allTags.map((tag) => ({
       path: `/tags/${tag.slug}`,
       changefreq: "weekly",
       priority: "0.4",

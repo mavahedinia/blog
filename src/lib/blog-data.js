@@ -10,9 +10,11 @@ export const authors = [
   {
     slug: "amin",
     name: "Amin",
-    bio: "Photography, technology, and notes in English and Farsi.",
-    longBio: "Personal blog covering photography, software, and the occasional bit of operations research.",
-    avatar: "https://i.pravatar.cc/200?img=68",
+    bio: "Photography, technology, etc.",
+    longBio:
+      "Personal blog covering cooking, software, music, photography and the occasional bit of operations research.",
+    avatar:
+      "https://1.gravatar.com/avatar/1f7856b6273e3e83c66131d43b6d822ac64791268b8becb28dde00721c7a16a4?s=200&d=mm",
   },
 ];
 
@@ -22,17 +24,6 @@ export const categories = [
   { slug: "photography", name: "Photography" },
   { slug: "music-piano", name: "Music / Piano" },
   { slug: "cooking", name: "Cooking" },
-];
-
-export const tags = [
-  { slug: "writing", name: "Writing" },
-  { slug: "typography", name: "Typography" },
-  { slug: "minimalism", name: "Minimalism" },
-  { slug: "tools", name: "Tools" },
-  { slug: "travel", name: "Travel" },
-  { slug: "process", name: "Process" },
-  { slug: "web", name: "Web" },
-  { slug: "books", name: "Books" },
 ];
 
 const isoDate = (date) => date?.toISOString().slice(0, 10);
@@ -48,10 +39,25 @@ export const normalizePost = (entry) => ({
 
 export const posts = async () => (await getCollection("blog")).map(normalizePost);
 
+export const tags = async () => {
+  const allPosts = await posts();
+  const seen = new Set();
+  const result = [];
+  for (const post of allPosts) {
+    for (const t of post.tags ?? []) {
+      if (!seen.has(t)) {
+        seen.add(t);
+        result.push({ slug: t, name: t });
+      }
+    }
+  }
+  return result;
+};
+
 export const getPost = async (slug) => (await posts()).find((post) => post.slug === slug);
 export const getAuthor = (slug) => authors.find((author) => author.slug === slug);
 export const getCategory = (slug) => categories.find((category) => category.slug === slug);
-export const getTag = (slug) => tags.find((tag) => tag.slug === slug);
+export const getTag = async (slug) => (await tags()).find((tag) => tag.slug === slug);
 export const postsByCategory = async (slug) =>
   (await sortedPosts()).filter((post) => post.category === slug);
 export const postsByTag = async (slug) =>
@@ -90,8 +96,13 @@ export const formatDate = (iso) =>
   });
 
 export const SITE = {
-  name: "Vahedinia's Blog",
-  description:
-    "Personal notes on photography, technology, and writing — in English and Farsi.",
+  name: "Amin's Blog",
+  description: "Personal takes on almost everything, master of all.",
   url: siteUrl,
+  socials: {
+    twitter: "https://x.com/01BinarySoul",
+    instagram: "https://instagram.com/01BinarySoul",
+    linkedin: "https://linkedin.com/in/mavahedinia",
+    github: "https://github.com/mavahedinia",
+  },
 };

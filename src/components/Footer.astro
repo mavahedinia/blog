@@ -3,6 +3,7 @@ import Icon from "./Icon.astro";
 import { SITE } from "../lib/blog-data.js";
 
 const { flush = false } = Astro.props;
+const { socials } = SITE;
 ---
 
 <footer class:list={[flush ? "mt-0" : "mt-24", "border-t border-border/60"]}>
@@ -10,9 +11,11 @@ const { flush = false } = Astro.props;
     <div class="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} {SITE.name}</div>
     <div class="flex items-center gap-3 text-muted-foreground">
       <a href="/rss.xml" aria-label="RSS" class="hover:text-foreground"><Icon name="rss" class="h-4 w-4" /></a>
-      <a href="https://x.com/quietpages" aria-label="Twitter" class="hover:text-foreground"><Icon name="twitter" class="h-4 w-4" /></a>
-      <a href="https://github.com/andreialba/quietpages" aria-label="GitHub" class="hover:text-foreground"><Icon name="github" class="h-4 w-4" /></a>
-      <a href="mailto:hello@example.com" aria-label="Email" class="hover:text-foreground"><Icon name="mail" class="h-4 w-4" /></a>
+      {socials?.twitter   && <a href={socials.twitter}           aria-label="Twitter"   class="hover:text-foreground"><Icon name="twitter"   class="h-4 w-4" /></a>}
+      {socials?.instagram && <a href={socials.instagram}         aria-label="Instagram" class="hover:text-foreground"><Icon name="instagram" class="h-4 w-4" /></a>}
+      {socials?.linkedin  && <a href={socials.linkedin}          aria-label="LinkedIn"  class="hover:text-foreground"><Icon name="linkedin"  class="h-4 w-4" /></a>}
+      {socials?.github    && <a href={socials.github}            aria-label="GitHub"    class="hover:text-foreground"><Icon name="github"    class="h-4 w-4" /></a>}
+      {socials?.email     && <a href={`mailto:${socials.email}`} aria-label="Email"     class="hover:text-foreground"><Icon name="mail"     class="h-4 w-4" /></a>}
     </div>
   </div>
 </footer>
