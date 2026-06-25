@@ -17,11 +17,11 @@ export const authors = [
 ];
 
 export const categories = [
-  { slug: "essays", name: "Essays" },
-  { slug: "design", name: "Design" },
   { slug: "engineering", name: "Engineering" },
-  { slug: "field-notes", name: "Field Notes" },
-  { slug: "interviews", name: "Interviews" },
+  { slug: "takes", name: "Takes" },
+  { slug: "photography", name: "Photography" },
+  { slug: "music-piano", name: "Music / Piano" },
+  { slug: "cooking", name: "Cooking" },
 ];
 
 export const tags = [

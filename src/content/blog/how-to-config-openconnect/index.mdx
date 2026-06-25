@@ -1,0 +1,160 @@
+---
+title: "کانفیگ openconnect روی ubuntu server 16.04 LTS"
+excerpt: "اینبار قراره که کانفیگ openconnect (ازین به بعد بهش ocserv هم می‌گم!) تو اوبونتو سرور ۱۶ آموزش بدم! قبل از همه چیز بگم که این آموزش جهت دور زدن تحریم‌ها و تامین امنیت در فضای مجازی می‌باشد و مسئولیت…"
+date: 2016-09-01
+readingTime: 6
+category: "engineering"
+tags: ["vpn", "وی‌پی‌ان", "openconnect", "anyconnect", "کانفیگ vpn"]
+author: "amin"
+lang: "fa"
+thumbnail: ./sq.png
+---
+
+اینبار قراره که کانفیگ `openconnect` (ازین به بعد بهش `ocserv` هم می‌گم!) تو اوبونتو سرور ۱۶ آموزش بدم! قبل از همه چیز بگم که این آموزش جهت دور زدن تحریم‌ها و تامین امنیت در فضای مجازی می‌باشد و مسئولیت هرگونه سوءاستفاده بر عهده کاربر می‌باشد.
+
+### `ocserv` چیه؟؟
+`ocserv` یه برنامه برای تونل زدن تو اینترنت هست که اطلاعات رد و بدل شده رو نیز رمزنگاری می‌کنه! قسمت تونل زدنش هست که برای ما ایرانیا خیلی کاربردیه! ولی برای امنیت هم هست! برای این‌که دید بهتری نسبت بهش داشته باشین، در سایت‌های فروش چیزپی‌ان، بهش می‌گن سرویس سیسکو.
+
+
+### پیش‌نیازها
+باز هم با بخش پیش‌نیاز ها شروع می‌کنیم!
+* یک عدد vps با ip اختصاصی و سیستم‌عامل `ubuntu server 16.04 LTS`
+* دسترسی روت به همان سرور
+* (اختیاری!) یک سرتیفیکیت `ssl` معتبر
+* صبر!
+
+### نصب `ocserv` و پکیج‌های مورد نیاز
+اول از هم باید `ocserv` رو، رو سرور نصب کنیم. برای اینکار، اول باید با کاربر `root` تو سرور لاگین کنین، بعد این دستور رو تو ترمینال بزنین تا پکیج‌های مربوطه نصب بشن:
+``` bash
+$ sudo apt-get install ocserv
+```
+حالا چون می‌خوایم که یسری سرتیفیکیت بسازیم، نیاز داریم که پکیج `GnuTLS` رو نصب کنیم. برای اینکار هم این دستور رو به ترمینال میدیم:
+``` bash
+$ sudo apt-get install gnutls-bin
+```
+
+### ساخت سرتیفیکیت‌ها
+حالا نوبت ساخت سرتیفیکیت هست، اگه می‌خواین خودتون یه سرتیفیکیت بسازین این مراحل رو طی کنید:
+* اول به دایرکتوری `/etc/ocserv` برین: `cd /etc/ocserv`
+* اول باید یه CA (Certificate Authority) برای خودمون بسازیم:
+اول یه فایل مثل `ca.tmpl` می‌سازیم (`vim ca.tmpl`) بعد نوشته‌های زیر رو توش کپی می‌کنیم:
+``` yml
+cn = "My CA"
+organization = "My Org"
+serial = 1
+expiration_days = 3650
+ca
+signing_key
+cert_signing_key
+crl_signing_key
+```
+که می‌تونین `cn` و `organization` رو عوض کنین،
+بعدش هم باید که بگین یه کلید رمز و سرتیفیکیت برای CA شما بسازه:
+``` bash
+$ sudo certtool --generate-privkey --outfile ca-key.pem
+$ sudo certtool --generate-self-signed --load-privkey ca-key.pem \
+    --template ca.tmpl --outfile ca-cert.pem
+```
+* حالا باید که از رو CA، یه سرتیفیکیت برای سرور بسازیم:
+اول فایل `server.tmpl` رو می‌سازیم و باز می‌کنیم (`vim server.tmpl`) بعد این متن رو توش پیست می‌کنیم:
+``` yml
+cn = "hexlinux.ir"
+organization = "My Org"
+expiration_days = 3650
+signing_key
+encryption_key
+tls_www_server
+```
+که `cn` باید ip یا دامنه شما باشه، `organization` هم باید با `organization` CA شما برابر باشد. سپس باید از فایل خارج بشیم (esc بعد : بعد wq) بعدش بگیم که از رو CA جدید ما، سرتیفیکیت و کلید رمز بساز:
+``` bash
+$ sudo certtool --generate-privkey --outfile server-key.pem
+$ sudo certtool --generate-certificate --load-privkey server-key.pem \
+    --load-ca-certificate ca-cert.pem --load-ca-privkey ca-key.pem \
+    --template server.tmpl --outfile server-cert.pem
+```
+
+اگر که از سرتیفیکیت پولی استفاده می‌کنین، باید فایل‌هارو به فرمت `pem` تبدیل کنین! فایل `.key` که با دستور `cat file.key >> file2.pem` از فایل `file.key` به فایل `file2.pem` تبدیل می‌کنه! برای فایل `.crt` نیز از `openssl` استفاده می‌کنیم:
+``` bash
+$ openssl x509 -in file.crt -out file2.pem -outform PEM
+```
+که `file.crt` اسم سرتیفیکیت شماس، `file2.pem` هم خروجیه! برای راحتی استفاده از این آموزش در قسمت اول file2 را به server-key تغییر دهید، در قسمت دوم نیز file2 را به server-cert تغییر دهید.
+
+### کانفیگ `ocserv`
+حالا نوبت کانفیگ `ocserv` هست! فایل `/etc/ocserv/ocserv.conf` رو با ادیتور خودتون (`nano` یا `vim`) باز کنین. حالا مقادیری را که در زیر می‌بینید پیدا و تنظیم کنید:
+``` yml
+# auth = "pam[gid-min=1000]"
+auth = "plain[/etc/ocserv/ocpasswd]"
+
+# server-cert = /etc/ssl/certs/ssl-cert-snakeoil.pem
+# server-key = /etc/ssl/private/ssl-cert-snakeoil.key
+server-cert = /etc/ocserv/server-cert.pem
+server-key = /etc/ocserv/server-key.pem
+
+# try-mtu-discovery = false
+try-mtu-discovery = true
+
+# dns = 192.168.1.2
+dns = 8.8.8.8
+dns = 4.2.2.4
+
+# Comment out all route fields
+# route = 10.10.10.0/255.255.255.0
+# route = 192.168.0.0/255.255.0.0
+# route = fef4:db8:1000:1001::/64
+
+# no-route = 192.168.5.0/255.255.255.0
+
+cisco-client-compat = true
+```
+(خط هایی که اولشان # هست را کامنت، آنهایی را که نیست، از کامنت در آورید!)
+حالا فایل کانفیگ را ذخیره کنید و از ادیتور خارج شوید.
+
+### ساخت یوزرنیم و پسورد
+برای لاگین در vpn، به ocserv گفتیم که از یک فایل استفاده کند که آدرس آن `/etc/ocserv/ocpasswd` است. باید به ocserv بگیم که برامون تو این فایل یوزر بسازه، برای اینکار از این دستور استفاده می‌کنیم:
+``` bash
+$ sudo ocpasswd -c /etc/ocserv/ocpasswd MrNull
+```
+و بعدش از شما می‌خواد که پسورد بدید به اکانت، شما پسورد را وارد کنید، چیزی نشان داده نمی‌شود:
+``` bash
+Enter password:
+Re-enter password:
+```
+
+### تنظیمات نهایی سرور و فایروال
+اول از همه برای اینکه تونل بزنیم، باید رو سرور از فایل `/etc/sysctl.conf`
+ `packet forwarding` رو فعال کنیم. برای همین این فایلو با ادیتور باز می‌کنیم و خط حاوی `net.ipv4.ip_forward=1` رو از کامنت خارج می‌کنیم (# اول آنرا پاک می‌کنیم)
+فایل را ذخیره می‌کنیم، از ادیتور خارج میشیم و چک می‌کنیم که آیا فعال شده یا نه:
+``` bash
+$ sudo sysctl -p
+```
+
+حالا باید پورت‌های مربوط به ocserv رو باز کنیم:
+``` bash
+$ sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+$ sudo iptables -A INPUT -p udp --dport 443 -j ACCEPT
+```
+که جای ۴۴۳ شماره پورتی رو می‌نویسیم که توی کانفیگ هست (خطی که شامل `tcp-port` هست)
+و باید بگیم که `NAT` فعال شه:
+``` bash
+$ sudo iptables -t nat -A POSTROUTING -j MASQUERADE
+```
+
+حالا باید تنظیمات فایروال رو ذخیره کنیم تا اگه سرور خاموش روشن شد چیزی نپره! برای اینکار اول با `sudo apt-get install iptables-persistent` پکیج مورد نظر رو نصب می‌کنیم، بعدش با `sudo dpkg-reconfigure iptables-persistent` دوباره آنرا پیکربندی می‌کنیم!
+
+### راه‌اندازی سرور
+حالا دیگه نوبت راه‌انداختن سرور هست. اول با `sudo lsof -i` چک می‌کنیم آیا برنامه‌ای روی پورت مورد نظر ocserv باز هست یا نه. اگه نبود حالا باید ocserv رو اجرا کنیم:
+``` bash
+$ sudo ocserv -c /etc/ocserv/ocserv.conf
+```
+حالا با `sudo netstat -tulpn | grep 443` چک می‌کنیم آیا ocserv ران شده یا نه (جای ۴۴۳ بازم شماره پورت ocserv رو می‌زاریم)
+
+پس از انجام این مراحل، سرور شما آماده استفاده است و باید با کلاینت `openconnect` یا `anyconnect` به سرور وصل شین (آدرس سرور به صورت `ip:port` می‌باشد که ip همان ip یا 
+دامنه متصل به vps و port نیز پورت ocserv است)
+
+آموزش اتصال به سرور نیز در تمام سیستم‌عامل‌ها در پست‌های بعدی گذاشته‌خواهد شد.
+
+در پایان نیز اگر مشکلی بود در کامنت‌ها مطرح کنید تا رسیدگی شود!
+
+**پ.ن**: با تشکر از mahdyfo (تلگرام: mahdyfo) که سرور در اختیار من گذاشت تا این آموزش رو کامل کنم!
+
+**پ.ن۲**: منبع این پست [سایت xuri.me](https://xuri.me/2016/03/19/ocserv-on-ubuntu-16-04-for-cisco-anyconnect-client.html) می‌باشد.
