@@ -37,7 +37,8 @@ export const normalizePost = (entry) => ({
   updated: isoDate(entry.data.updated),
 });
 
-export const posts = async () => (await getCollection("blog")).map(normalizePost);
+export const posts = async () =>
+  (await getCollection("blog")).filter((e) => !e.data.draft).map(normalizePost);
 
 export const tags = async () => {
   const allPosts = await posts();

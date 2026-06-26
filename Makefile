@@ -2,6 +2,7 @@
 
 BUILD_DIR  ?= dist
 CATEGORY   ?= engineering
+DRAFT      ?= false
 TITLE      ?=
 
 install:
@@ -28,18 +29,21 @@ create-post:
 	fi; \
 	mkdir -p "$$dir"; \
 	today=$$(date +%Y-%m-%d); \
-	printf '%s\n' \
-		'---' \
-		"title: \"$$title\"" \
-		'excerpt: ""' \
-		"date: $$today" \
-		'readingTime: 1' \
-		"category: \"$$category\"" \
-		'tags: []' \
-		'author: "amin"' \
-		'lang: "en"' \
-		'thumbnail: ./thumb.png' \
-		'---' \
-		'' \
-		> "$$dir/index.mdx"; \
+	draft_line=""; \
+	if [ "$(DRAFT)" = "true" ]; then draft_line="draft: true"; fi; \
+	{ \
+		printf '%s\n' \
+			'---' \
+			"title: \"$$title\"" \
+			'excerpt: ""' \
+			"date: $$today" \
+			'readingTime: 1' \
+			"category: \"$$category\"" \
+			'tags: []' \
+			'author: "amin"' \
+			'lang: "en"' \
+			'thumbnail: ./thumb.png'; \
+		[ -n "$$draft_line" ] && printf '%s\n' "$$draft_line"; \
+		printf '%s\n' '---' ''; \
+	} > "$$dir/index.mdx"; \
 	echo "Created: $$dir/index.mdx"
