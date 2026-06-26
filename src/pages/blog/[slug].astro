@@ -114,8 +114,8 @@ const jsonLd = {
     {
       post.thumbnail && (
         <figure class="mx-auto mt-10 max-w-4xl">
-          <div class="overflow-hidden rounded-md bg-muted">
-            <Image src={post.thumbnail} alt={post.imageCredit?.caption ?? ""} class="w-full" />
+          <div class="aspect-[16/9] overflow-hidden rounded-md bg-muted">
+            <Image src={post.thumbnail} alt={post.imageCredit?.caption ?? ""} class="h-full w-full object-cover" />
           </div>
           {
             post.imageCredit && (
